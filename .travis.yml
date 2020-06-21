@@ -15,6 +15,7 @@ before_script:
 
 script:
   - docker --version # print the version for logging
+  # Udagram front-end
   - docker build -t udagram-front-end udagram-frontend/.
   - docker tag udagram-front-end markmavromatis/udagram-front-end:latest
 
