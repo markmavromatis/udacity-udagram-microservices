@@ -106,3 +106,5 @@ dist
 # Docker environment variables file
 .docker_env_file
 
+
+.DS_Store
