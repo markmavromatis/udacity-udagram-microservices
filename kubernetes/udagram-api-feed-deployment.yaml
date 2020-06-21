@@ -19,6 +19,32 @@ spec:
       - image: markmavromatis/udagram-api-feed
         name: udagram-api-feed
         imagePullPolicy: Always          
+        env:
+          - name: POSTGRES_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: db-user-pass
+                key: POSTGRES_USERNAME
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-user-pass
+                key: POSTGRES_PASSWORD
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: web-user-authentication
+                key: jwt-secret
+          - name: POSTGRES_DB
+            value: udagram_mavromatis_dev
+          - name: POSTGRES_HOST
+            value: udagram-mavromatis-dev.cguzw4eojx3a.us-east-2.rds.amazonaws.com
+          - name: AWS_REGION
+            value: us-east-2
+          - name: AWS_PROFILE
+            value: default
+          - name: AWS_BUCKET
+            value: udagram-mavromatis-dev
         resources:
           requests:
             memory: "64Mi"
