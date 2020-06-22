@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: udagram-front-end
   labels:
     service: udagram-front-end
-  name: udagram-front-end
 spec:
   replicas: 1
   selector:
@@ -19,13 +19,6 @@ spec:
       - image: markmavromatis/udagram-front-end
         name: udagram-front-end
         imagePullPolicy: Always          
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "1024Mi"
-            cpu: "500m"       
         ports:
-        - containerPort: 8100
+        - containerPort: 80
       restartPolicy: Always
