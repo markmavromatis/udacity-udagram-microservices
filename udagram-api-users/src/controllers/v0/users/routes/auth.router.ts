@@ -10,7 +10,14 @@ import {NextFunction} from 'connect';
 import * as EmailValidator from 'email-validator';
 import {config} from 'bluebird';
 
+const session = require('express-session')
+
+
 const router: Router = Router();
+
+router.use(session({
+  'secret': '343ji43j4n3jn4jk3n'
+}))
 
 
 async function generatePassword(plainTextPassword: string): Promise<string> {
@@ -56,6 +63,9 @@ router.post('/login', async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  var sessionId = req.session.id;
+  console.log(`SessionID ${sessionId} START Logging in user: ${email}`);
+
   if (!email || !EmailValidator.validate(email)) {
     return res.status(400).send({auth: false, message: 'Email is required or malformed.'});
   }
@@ -77,12 +87,16 @@ router.post('/login', async (req: Request, res: Response) => {
 
   const jwt = generateJWT(user);
   res.status(200).send({auth: true, token: jwt, user: user.short()});
+  console.log(`SessionID ${sessionId} END Logging in user: ${email}`);
 });
 
 
 router.post('/', async (req: Request, res: Response) => {
   const email = req.body.email;
   const plainTextPassword = req.body.password;
+
+  var sessionId = req.session.id;
+  console.log(`SessionID ${sessionId} START Registering new user: ${email}`);
 
   if (!email || !EmailValidator.validate(email)) {
     return res.status(400).send({auth: false, message: 'Email is missing or malformed.'});
@@ -109,6 +123,8 @@ router.post('/', async (req: Request, res: Response) => {
 
   const jwt = generateJWT(savedUser);
   res.status(201).send({token: jwt, user: savedUser.short()});
+  console.log(`SessionID ${sessionId} END Registering new user: ${email}`);
+
 });
 
 router.get('/', async (req: Request, res: Response) => {

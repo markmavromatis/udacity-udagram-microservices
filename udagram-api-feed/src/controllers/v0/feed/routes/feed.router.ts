@@ -5,7 +5,12 @@ import * as jwt from 'jsonwebtoken';
 import * as AWS from '../../../../aws';
 import * as c from '../../../../config/config';
 
+const session = require('express-session')
 const router: Router = Router();
+
+router.use(session({
+  'secret': '343ji43j4n3jn4jk3n'
+}))
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.headers || !req.headers.authorization) {
@@ -28,6 +33,8 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 // Get all feed items
 router.get('/', async (req: Request, res: Response) => {
+  var sessionId = req.session.id;
+  console.log(`SessionID ${sessionId} START Requesting all feed items`);
   const items = await FeedItem.findAndCountAll({order: [['id', 'DESC']]});
   items.rows.map((item) => {
     if (item.url) {
@@ -35,14 +42,19 @@ router.get('/', async (req: Request, res: Response) => {
     }
   });
   res.send(items);
+  console.log(`SessionID ${sessionId} END Requesting all feed items`);
 });
 
 // Get a feed resource
 router.get('/:id',
     async (req: Request, res: Response) => {
       const {id} = req.params;
+      var sessionId = req.session.id;
+      console.log(`SessionID ${sessionId} START Requesting feed item ${id}`);
+
       const item = await FeedItem.findByPk(id);
       res.send(item);
+      console.log(`SessionID ${sessionId} END Requesting feed item ${id}`);
     });
 
 // Get a signed url to put a new item in the bucket
@@ -50,16 +62,21 @@ router.get('/signed-url/:fileName',
     requireAuth,
     async (req: Request, res: Response) => {
       const {fileName} = req.params;
+      var sessionId = req.session.id;
+      console.log(`SessionID ${sessionId} START Requesting signed URL for file ${fileName}`);
       const url = AWS.getPutSignedUrl(fileName);
       res.status(201).send({url: url});
+      console.log(`SessionID ${sessionId} END Requesting signed URL for file ${fileName}`);
     });
 
 // Create feed with metadata
 router.post('/',
     requireAuth,
     async (req: Request, res: Response) => {
+      var sessionId = req.session.id;
       const caption = req.body.caption;
       const fileName = req.body.url; // same as S3 key name
+      console.log(`SessionID ${sessionId} START Uploading file ${fileName}`);
 
       if (!caption) {
         return res.status(400).send({message: 'Caption is required or malformed.'});
@@ -78,6 +95,7 @@ router.post('/',
 
       savedItem.url = AWS.getGetSignedUrl(savedItem.url);
       res.status(201).send(savedItem);
+      console.log(`SessionID ${sessionId} END Uploading file ${fileName}`);
     });
 
 export const FeedRouter: Router = router;
