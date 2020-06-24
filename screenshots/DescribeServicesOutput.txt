@@ -1,0 +1,87 @@
+Name:              kubernetes
+Namespace:         default
+Labels:            component=apiserver
+                   provider=kubernetes
+Annotations:       <none>
+Selector:          <none>
+Type:              ClusterIP
+IP:                10.100.0.1
+Port:              https  443/TCP
+TargetPort:        443/TCP
+Endpoints:         172.31.19.215:443,172.31.9.95:443
+Session Affinity:  None
+Events:            <none>
+
+
+Name:              udagram-api-feed-svc
+Namespace:         default
+Labels:            service=udagram-api-feed
+Annotations:       kubectl.kubernetes.io/last-applied-configuration:
+                     {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"service":"udagram-api-feed"},"name":"udagram-api-feed-svc","na...
+Selector:          service=udagram-api-feed
+Type:              ClusterIP
+IP:                10.100.70.213
+Port:              8080  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         172.31.1.141:8080,172.31.19.133:8080
+Session Affinity:  None
+Events:            <none>
+
+
+Name:              udagram-api-users-svc
+Namespace:         default
+Labels:            service=udagram-api-users
+Annotations:       kubectl.kubernetes.io/last-applied-configuration:
+                     {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"service":"udagram-api-users"},"name":"udagram-api-users-svc","...
+Selector:          service=udagram-api-users
+Type:              ClusterIP
+IP:                10.100.173.237
+Port:              8080  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         172.31.18.187:8080
+Session Affinity:  None
+Events:            <none>
+
+
+Name:                     udagram-front-end-svc
+Namespace:                default
+Labels:                   service=udagram-front-end
+Annotations:              kubectl.kubernetes.io/last-applied-configuration:
+                            {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"service":"udagram-front-end"},"name":"udagram-front-end-svc","...
+Selector:                 service=udagram-front-end
+Type:                     LoadBalancer
+IP:                       10.100.25.65
+LoadBalancer Ingress:     abdbc4b69b02449fb9d6f1ef93e14db6-12188533.us-east-2.elb.amazonaws.com
+Port:                     8100  8100/TCP
+TargetPort:               80/TCP
+NodePort:                 8100  30890/TCP
+Endpoints:                172.31.33.206:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:
+  Type    Reason                Age   From                Message
+  ----    ------                ----  ----                -------
+  Normal  EnsuringLoadBalancer  9m8s  service-controller  Ensuring load balancer
+  Normal  EnsuredLoadBalancer   9m6s  service-controller  Ensured load balancer
+
+
+Name:                     udagram-reverse-proxy-svc
+Namespace:                default
+Labels:                   service=udagram-reverse-proxy
+Annotations:              kubectl.kubernetes.io/last-applied-configuration:
+                            {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"service":"udagram-reverse-proxy"},"name":"udagram-reverse-prox...
+Selector:                 service=udagram-reverse-proxy
+Type:                     LoadBalancer
+IP:                       10.100.82.233
+LoadBalancer Ingress:     a42348192de0641dca59631f8a6ebd29-606787.us-east-2.elb.amazonaws.com
+Port:                     8080  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 8080  32015/TCP
+Endpoints:                172.31.20.15:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:
+  Type    Reason                Age   From                Message
+  ----    ------                ----  ----                -------
+  Normal  EnsuringLoadBalancer  24m   service-controller  Ensuring load balancer
+  Normal  EnsuredLoadBalancer   24m   service-controller  Ensured load balancer
